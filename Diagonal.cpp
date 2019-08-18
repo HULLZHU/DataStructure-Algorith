@@ -1,61 +1,74 @@
-#include<iostream>
-#include<vector>
+#include <iostream>
 using namespace std;
 
 class Diagonal
 {
 private:
-    int width;
-    int* A;
+    int n;
+    int *A;
+
 public:
-    Diagonal()
+    Diagonal(int n)
     {
-        width = 0;
-        A = new int[0];
-    };
-
-    Diagonal(int _width, int *B)
-    {
-        width = _width;
-        A = B;
+        this->n = n;
+        A = new int[n];
     }
 
-    ~Diagonal()
-    {
-        delete []A;
-    }
+    ~Diagonal(){delete []A;};
 
-    friend void operator<<=(Diagonal &diag, vector<int> &v);
-    friend ostream& operator<<(ostream& os, Diagonal& diag);    
+    bool set(int i, int j ,int x);
+
+    int get(int i, int j);
+
+    friend ostream &operator<<(ostream &os, Diagonal &diag);
+
 };
 
-ostream& operator<<(ostream& os, Diagonal& diag)
+
+bool Diagonal::set(int i, int j, int x)
 {
-    for(int i = 0 ; i < diag.width ; i ++ )
+    if(i == j)
     {
-        for(int j = 0 ; j < diag.width; j++)
+        A[i-1]= x;
+        return true;
+    }
+    return false;
+}
+
+int Diagonal::get(int i, int j)
+{
+    if ( i==j )return A[i-1];
+    else return 0;
+}
+
+ostream& operator<<(ostream &os, Diagonal &diag)
+{
+    for(int i = 0 ; i < diag.n; i ++ )
+    {
+        for ( int j = 0 ; j < diag.n; j ++ )
         {
-            if(i == j)
-                cout<<diag.A[i]<<" ";
+            if ( j == 0)
+                cout<<"|";
+
+            if ( i == j)
+                cout<<diag.A[i]<<",";
             else
-                cout<<0<<" ";
+                cout<<0<<",";
+
+            if (j == diag.n-1)
+            cout<<"|\n";
         }
-        cout<<endl;
     }
 }
 
-void operator<<=(Diagonal &diag, vector<int>&v)
-{
-    diag.A = new int[v.size()];
-    std::copy(v.begin(),v.end(),diag.A);
-    diag.width = v.size();  
-};
-
 int main()
 {
-    int A[] = {1,2,3,4,5};
-    vector<int> v(A,A+sizeof(A)/sizeof(A[0]));
-    Diagonal *p_diag = new Diagonal();
-    *p_diag <<= v;
-    cout<<*p_diag;
+    Diagonal *diag = new Diagonal(5);
+    diag->set(1,1,5);
+    diag->set(2,2,4);
+    diag->set(3,3,3);
+    diag->set(4,4,2);
+    diag->set(5,5,1);
+    cout<<*diag;
+
 }
